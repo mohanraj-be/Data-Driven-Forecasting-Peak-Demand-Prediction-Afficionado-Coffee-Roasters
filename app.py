@@ -284,11 +284,18 @@ elif nav_page == "⚡ Peak Demand & Staffing Optimizer":
         'operational_guidance': 'Kitchen Guidance'
     })
     
+    styler = display_sched.style
+    if hasattr(styler, 'map'):
+        styler = styler.map(style_tier, subset=['Demand Tier'])
+    else:
+        styler = styler.applymap(style_tier, subset=['Demand Tier'])
+    styler = styler.format({
+        'Pred Rev ($)': '${:.2f}',
+        'Rush Prob': '{:.1%}'
+    })
+    
     st.dataframe(
-        display_sched.style.applymap(style_tier, subset=['Demand Tier']).format({
-            'Pred Rev ($)': '${:.2f}',
-            'Rush Prob': '{:.1%}'
-        }),
+        styler,
         use_container_width=True,
         hide_index=True
     )
